@@ -1,0 +1,42 @@
+1、SqlPackage.PySqlite:这是sqlite操作的类，实现创建表（sqlite_creat）,csv导入表（sqlite_insert）,
+                       自动读取已写好的sql脚本（sqlite_check）,查询结果导出（sqlite_output）
+
+2、步骤:1、用户在GUI上选择需要导入的csv表，可打开资源管理器选择，界面上 导入的tablename可选择（不能重复选）。
+       2、判断table是否已创建，是则跳过，否则新建表，用二进制文件或xml打包固定表头，供调用
+       3、检查导入的表，表头与数据库表的表头是否一致，不一致则弹框警告，一致则跳过。
+       4、依次导入csv到数据库中
+       5、导入完后判断各表数据量与导入量是否一致，不一致则弹框警告，否则跳过。
+       6、读取sql脚本查询指定格式数据，并导出到excel中
+
+3、各表的表头信息：
+LTE_Traffic = ('day', 'cellNum', 'subNet', 'cluster', 'site', 'sitenamechinese','location', 'cellNameChinese', '覆盖属性', 'siteType', 'ecgi', '空口总业务量MB','空口总业务量GB', 'VoLTE语音话务量（Erl） ', '最大RRC连接用户数')
+MR = ('全网区域', 'AB格', '英文名', '小区名', 'cellid', '采用点总数', '小于-110数', '覆盖率', '日期')
+NB_Traffic = ('day', 'cellNum', 'subNet', 'cluster', 'site', 'sitenamechinese', 'location', 'cellNameChinese','覆盖属性', 'siteType', 'ecgi', 'NB上行流量(KB)', 'NB下行流量(KB)', 'PUSCH上行干扰电平')
+TA_RSRP = ('day', 'cellNum', 'subNet', 'cluster', 'site', 'sitenamechinese', 'location', 'cellNameChinese', '覆盖属性','siteType', 'ecgi', '平均下行RSRP')
+GSM_Traffic_G = ('day', 'cellNum', 'subNet', 'cluster', 'site', 'sitenamechinese', 'location', 'cellNameChinese','覆盖属性', 'siteType', 'ecgi', '空口总业务量MB', '空口总业务量GB', 'VoLTE语音话务量（Erl）', '最大RRC连接用户数')
+GSM_Traffic_Y = ('时间', '地市', 'CGI', '所用频段', '设备厂商', '小区英文名', '小区总话务量', '半速率话音信道话务量','全速率话音信道话务量', 'TCH信道可用数', '总流量', 'PDCH承载效率', '占用的PDCH的平均数目', 'PDCH复用度', '无线利用率')
+
+4、GUI的执行代码：
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    mainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(mainWindow)
+    mainWindow.show()
+    sys.exit(app.exec_())
+
+self.toolButton.clicked.connect(self.test)
+
+def openfile(self, n):
+    openfile_name = QFileDialog.getOpenFileName(self.centralwidget, '选择文件', '')
+    file_name = openfile_name[0].split("/")[-1]
+    print('linetext_{0}被输入数据：'.format(n)+openfile_name[0])
+    print('文件名为：'+file_name)
+    if n == 1:
+        self.lineEdit_1.setText(file_name)
+    elif n == 2:
+        self.lineEdit_2.setText(file_name)
+    elif n == 3:
+        self.lineEdit_3.setText(file_name)
+    elif n == 4:
+        self.lineEdit_4.setText(file_name)
