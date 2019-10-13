@@ -9,7 +9,7 @@ import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
-from PyQt5.QtWidgets import QFileDialog, QHeaderView
+from PyQt5.QtWidgets import QFileDialog
 from PyFile import *
 
 
@@ -35,6 +35,9 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
         MainWindow.setStatusBar(self.statusbar)
         self.menubar.addAction(self.menu.menuAction())
+        self.action = QtWidgets.QAction(MainWindow)
+        self.action_2 = QtWidgets.QAction(MainWindow)
+        self.action_3 = QtWidgets.QAction(MainWindow)
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.lineEdit_1 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_2 = QtWidgets.QLineEdit(self.frame)
@@ -88,9 +91,11 @@ class Ui_MainWindow(object):
         self.frame.setEnabled(True)
         self.frame.setAutoFillBackground(False)
         self.tabWidget.setAutoFillBackground(True)
+
         self.centralwidget.setObjectName("centralwidget")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+
         self.frame.setObjectName("frame")
         self.lineEdit_1.setObjectName("lineEdit_1")
         self.lineEdit_2.setObjectName("lineEdit_2")
@@ -100,7 +105,7 @@ class Ui_MainWindow(object):
         self.comboBox_2.setObjectName("comboBox_2")
         self.comboBox_3.setObjectName("comboBox_3")
         self.comboBox_4.setObjectName("comboBox_4")
-        self.tabWidget.setStyleSheet("color: rgb(0, 0, 0);")
+        self.tabWidget.setStyleSheet("color: rgb(0, 0 , 0);")
         self.tabWidget.setObjectName("tabWidget")
         self.tab.setObjectName("tab")
         self.tab_2.setObjectName("tab_2")
@@ -114,7 +119,15 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         self.menu.setObjectName("menu")
         self.statusbar.setObjectName("statusbar")
+        self.action.setObjectName("action")
+        self.action_2.setObjectName("action_2")
+        self.action_3.setObjectName("action_3")
 
+        self.frame.setHidden(False)
+        self.menu.addAction(self.action)
+        self.menu.addAction(self.action_2)
+        self.menu.addAction(self.action_3)
+        self.menubar.addAction(self.menu.menuAction())
         self.tabWidget.addTab(self.tab, "")
         self.tabWidget.addTab(self.tab_2, "")
         icon = QtGui.QIcon()
@@ -132,33 +145,34 @@ class Ui_MainWindow(object):
         self.menubar.setDefaultUp(False)
         self.tableView.horizontalHeader().setStretchLastSection(True)  # 最后一列决定充满剩下的界面
         # self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # 所有列自动拉伸，充满界面
-
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
+
+    def Qweiget_function(self):
         # toolbutton点击后（鼠标点击释放），打开文件目录
         self.toolButton_1.released.connect(lambda: self.openfile(1))
         self.toolButton_2.released.connect(lambda: self.openfile(2))
         self.toolButton_3.released.connect(lambda: self.openfile(3))
         self.toolButton_4.released.connect(lambda: self.openfile(4))
 
+        # Combobox 初始化：加入数据库的中的表名
+        self.init_combobox(1, *self.list_i)
+        self.init_combobox(2, *self.list_i)
+        self.init_combobox(3, *self.list_i)
+        self.init_combobox(4, *self.list_i)
         # combobox点击时刷新下拉菜单，每个下拉菜单选择后，后选的combobox不会重复出现选项
         self.comboBox.activated[int].connect(lambda: self.on_combo_activated(1))
         self.comboBox_2.activated[int].connect(lambda: self.on_combo_activated(2))
         self.comboBox_3.activated[int].connect(lambda: self.on_combo_activated(3))
         self.comboBox_4.activated[int].connect(lambda: self.on_combo_activated(4))
 
-        self.init_combobox(1, *self.list_i)
-        self.init_combobox(2, *self.list_i)
-        self.init_combobox(3, *self.list_i)
-        self.init_combobox(4, *self.list_i)
-
         self.pushButton_1.released.connect(lambda: self.button_click())
+
         self.lineEdit_1.textChanged.connect(lambda: self.line_change(1))
         self.lineEdit_2.textChanged.connect(lambda: self.line_change(2))
         self.lineEdit_3.textChanged.connect(lambda: self.line_change(3))
         self.lineEdit_4.textChanged.connect(lambda: self.line_change(4))
-
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -171,6 +185,9 @@ class Ui_MainWindow(object):
         self.toolButton_4.setText(_translate("MainWindow", "..."))
         self.pushButton_1.setText(_translate("MainWindow", "导入"))
         self.pushButton_2.setText(_translate("MainWindow", "清空"))
+        self.action.setText(_translate("MainWindow", "初始化"))
+        self.action_2.setText(_translate("MainWindow", "导入数据"))
+        self.action_3.setText(_translate("MainWindow", "清理数据库"))
         self.menu.setTitle(_translate("MainWindow", "指标体系"))
 
     def openfile(self, n):
