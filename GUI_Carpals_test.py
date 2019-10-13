@@ -162,7 +162,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "指标体系一键生成"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Tab 2"))
         self.toolButton_1.setText(_translate("MainWindow", "..."))
@@ -170,6 +170,7 @@ class Ui_MainWindow(object):
         self.toolButton_3.setText(_translate("MainWindow", "..."))
         self.toolButton_4.setText(_translate("MainWindow", "..."))
         self.pushButton_1.setText(_translate("MainWindow", "导入"))
+        self.pushButton_2.setText(_translate("MainWindow", "清空"))
         self.menu.setTitle(_translate("MainWindow", "指标体系"))
 
     def openfile(self, n):
