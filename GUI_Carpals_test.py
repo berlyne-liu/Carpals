@@ -31,6 +31,7 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.menu = QtWidgets.QMenu(self.menubar)
+        self.menu_2 = QtWidgets.QMenu(self.menubar)
         MainWindow.setCentralWidget(self.centralwidget)
         MainWindow.setMenuBar(self.menubar)
         MainWindow.setStatusBar(self.statusbar)
@@ -118,16 +119,18 @@ class Ui_MainWindow(object):
         self.pushButton_1.setObjectName("pushButton")
         self.menubar.setObjectName("menubar")
         self.menu.setObjectName("menu")
+        self.menu_2.setObjectName("menu_2")
         self.statusbar.setObjectName("statusbar")
         self.action.setObjectName("action")
         self.action_2.setObjectName("action_2")
         self.action_3.setObjectName("action_3")
 
-        self.frame.setHidden(False)
+        self.frame.setHidden(True)
         self.menu.addAction(self.action)
         self.menu.addAction(self.action_2)
-        self.menu.addAction(self.action_3)
+        self.menu_2.addAction(self.action_3)
         self.menubar.addAction(self.menu.menuAction())
+        self.menubar.addAction(self.menu_2.menuAction())
         self.tabWidget.addTab(self.tab, "")
         self.tabWidget.addTab(self.tab_2, "")
         icon = QtGui.QIcon()
@@ -150,6 +153,10 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(1)
 
     def Qweiget_function(self):
+        self.action.triggered.connect(lambda: self.frame_init(1))
+        self.action_2.triggered.connect(lambda: self.frame_init(2))
+        self.action_3.triggered.connect(lambda: self.frame_init(3))
+
         # toolbutton点击后（鼠标点击释放），打开文件目录
         self.toolButton_1.released.connect(lambda: self.openfile(1))
         self.toolButton_2.released.connect(lambda: self.openfile(2))
@@ -168,7 +175,6 @@ class Ui_MainWindow(object):
         self.comboBox_4.activated[int].connect(lambda: self.on_combo_activated(4))
 
         self.pushButton_1.released.connect(lambda: self.button_click())
-
         self.lineEdit_1.textChanged.connect(lambda: self.line_change(1))
         self.lineEdit_2.textChanged.connect(lambda: self.line_change(2))
         self.lineEdit_3.textChanged.connect(lambda: self.line_change(3))
@@ -186,9 +192,18 @@ class Ui_MainWindow(object):
         self.pushButton_1.setText(_translate("MainWindow", "导入"))
         self.pushButton_2.setText(_translate("MainWindow", "清空"))
         self.action.setText(_translate("MainWindow", "初始化"))
-        self.action_2.setText(_translate("MainWindow", "导入数据"))
-        self.action_3.setText(_translate("MainWindow", "清理数据库"))
-        self.menu.setTitle(_translate("MainWindow", "指标体系"))
+        self.action_2.setText(_translate("MainWindow", "清理数据库"))
+        self.action_3.setText(_translate("MainWindow", "导入数据"))
+        self.menu.setTitle(_translate("MainWindow", "数据空间"))
+        self.menu_2.setTitle(_translate("MainWindow", "数据处理"))
+
+    def frame_init(self, n):
+        if n == 1:
+            self.frame.setHidden(True)
+        elif n == 2:
+            self.frame.setHidden(True)
+        elif n == 3:
+            self.frame.setHidden(False)
 
     def openfile(self, n):
         """
