@@ -32,6 +32,7 @@ class Ui_MainWindow(object):
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu_2 = QtWidgets.QMenu(self.menubar)
         self.menu2_1 = QtWidgets.QMenu(self.menu_2)
+        self.menu_3 = QtWidgets.QMenu(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         MainWindow.setCentralWidget(self.centralwidget)
         MainWindow.setMenuBar(self.menubar)
@@ -41,6 +42,7 @@ class Ui_MainWindow(object):
         self.action_2 = QtWidgets.QAction(MainWindow)
         self.action_3 = QtWidgets.QAction(MainWindow)
         self.action_4 = QtWidgets.QAction(MainWindow)
+        self.action_5 = QtWidgets.QAction(MainWindow)
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.lineEdit_1 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_2 = QtWidgets.QLineEdit(self.frame)
@@ -123,11 +125,13 @@ class Ui_MainWindow(object):
         self.menu.setObjectName("menu")
         self.menu_2.setObjectName("menu_2")
         self.menu2_1.setObjectName("menu2_1")
+        self.menu_3.setObjectName("menu_3")
         self.statusbar.setObjectName("statusbar")
         self.action.setObjectName("action")
         self.action_2.setObjectName("action_2")
         self.action_3.setObjectName("action_3")
         self.action_4.setObjectName("action_4")
+        self.action_5.setObjectName("action_5")
 
         self.frame.setHidden(True)
         self.menu.addAction(self.action)
@@ -135,9 +139,11 @@ class Ui_MainWindow(object):
         self.menu_2.addAction(self.menu2_1.menuAction())
         self.menu2_1.addAction(self.action_3)
         self.menu2_1.addAction(self.action_4)
+        self.menu_3.addAction(self.action_5)
 
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
+        self.menubar.addAction(self.menu_3.menuAction())
         self.tabWidget.addTab(self.tab, "")
         self.tabWidget.addTab(self.tab_2, "")
         icon = QtGui.QIcon()
@@ -163,6 +169,8 @@ class Ui_MainWindow(object):
         self.action.triggered.connect(lambda: self.frame_init(1))
         self.action_2.triggered.connect(lambda: self.frame_init(2))
         self.action_3.triggered.connect(lambda: self.frame_init(3))
+        self.action_4.triggered.connect(lambda: None)
+        self.action_5.triggered.connect(lambda: None)
 
         # toolbutton点击后（鼠标点击释放），打开文件目录
         self.toolButton_1.released.connect(lambda: self.openfile(1))
@@ -189,7 +197,17 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "指标体系一键生成"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "网优日常小工具-专用版"))
+        self.menu.setTitle(_translate("MainWindow", "数据空间"))
+        self.action.setText(_translate("MainWindow", "初始化"))
+        self.action_2.setText(_translate("MainWindow", "清理数据库"))
+        self.menu_2.setTitle(_translate("MainWindow", "指标体系"))
+        self.menu2_1.setTitle(_translate("MainWindow", "导入数据"))
+        self.action_3.setText(_translate("MainWindow", "固定格式导入"))
+        self.action_4.setText(_translate("MainWindow", "自定义格式导入"))
+        self.menu_3.setTitle(_translate("MainWindow", "告警处理"))
+        self.action_5.setText(_translate("MainWindow", "LTE告警解析"))
+
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Tab 2"))
         self.toolButton_1.setText(_translate("MainWindow", "..."))
@@ -198,13 +216,7 @@ class Ui_MainWindow(object):
         self.toolButton_4.setText(_translate("MainWindow", "..."))
         self.pushButton_1.setText(_translate("MainWindow", "导入"))
         self.pushButton_2.setText(_translate("MainWindow", "清空"))
-        self.action.setText(_translate("MainWindow", "初始化"))
-        self.action_2.setText(_translate("MainWindow", "清理数据库"))
-        self.action_3.setText(_translate("MainWindow", "固定格式导入"))
-        self.action_4.setText(_translate("MainWindow", "自定义格式导入"))
-        self.menu.setTitle(_translate("MainWindow", "数据空间"))
-        self.menu_2.setTitle(_translate("MainWindow", "数据处理"))
-        self.menu2_1.setTitle(_translate("MainWindow", "导入数据"))
+
 
     def frame_init(self, n):
         if n == 1:

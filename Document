@@ -40,3 +40,12 @@ def openfile(self, n):
         self.lineEdit_3.setText(file_name)
     elif n == 4:
         self.lineEdit_4.setText(file_name)
+
+5、新增功能：告警解析
+功能分析：1）导入文件功能；
+         2）解析文本和xml
+         3) 导入Sqlite
+         4) 编写sql脚本，实现"增删改查"功能
+         5）实现结果显示功能，实现导出功能
+         6）设计用户交互界面
+         7）实现详细的可选择性的解析控制功能：小区属性筛选，告警原表的增删改操作，小区信息增删改操作
