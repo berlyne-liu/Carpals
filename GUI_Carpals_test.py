@@ -29,9 +29,10 @@ class Ui_MainWindow(object):
         MainWindow.setPalette(palette)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu_2 = QtWidgets.QMenu(self.menubar)
+        self.menu2_1 = QtWidgets.QMenu(self.menu_2)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
         MainWindow.setCentralWidget(self.centralwidget)
         MainWindow.setMenuBar(self.menubar)
         MainWindow.setStatusBar(self.statusbar)
@@ -39,6 +40,7 @@ class Ui_MainWindow(object):
         self.action = QtWidgets.QAction(MainWindow)
         self.action_2 = QtWidgets.QAction(MainWindow)
         self.action_3 = QtWidgets.QAction(MainWindow)
+        self.action_4 = QtWidgets.QAction(MainWindow)
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.lineEdit_1 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_2 = QtWidgets.QLineEdit(self.frame)
@@ -120,15 +122,20 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         self.menu.setObjectName("menu")
         self.menu_2.setObjectName("menu_2")
+        self.menu2_1.setObjectName("menu2_1")
         self.statusbar.setObjectName("statusbar")
         self.action.setObjectName("action")
         self.action_2.setObjectName("action_2")
         self.action_3.setObjectName("action_3")
+        self.action_4.setObjectName("action_4")
 
         self.frame.setHidden(True)
         self.menu.addAction(self.action)
         self.menu.addAction(self.action_2)
-        self.menu_2.addAction(self.action_3)
+        self.menu_2.addAction(self.menu2_1.menuAction())
+        self.menu2_1.addAction(self.action_3)
+        self.menu2_1.addAction(self.action_4)
+
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
         self.tabWidget.addTab(self.tab, "")
@@ -193,9 +200,11 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "清空"))
         self.action.setText(_translate("MainWindow", "初始化"))
         self.action_2.setText(_translate("MainWindow", "清理数据库"))
-        self.action_3.setText(_translate("MainWindow", "导入数据"))
+        self.action_3.setText(_translate("MainWindow", "固定格式导入"))
+        self.action_4.setText(_translate("MainWindow", "自定义格式导入"))
         self.menu.setTitle(_translate("MainWindow", "数据空间"))
         self.menu_2.setTitle(_translate("MainWindow", "数据处理"))
+        self.menu2_1.setTitle(_translate("MainWindow", "导入数据"))
 
     def frame_init(self, n):
         if n == 1:
@@ -309,7 +318,7 @@ class Ui_MainWindow(object):
         self.model.setHorizontalHeaderLabels(title)
         for row, data in enumerate(data):
             for column, item in enumerate(data):
-                i = QStandardItem(str(item)) if item != None else QStandardItem('')
+                i = QStandardItem(str(item)) if item is not None else QStandardItem('')
                 self.model.setItem(row, column, i)
         self.tableView.setModel(self.model)
 
