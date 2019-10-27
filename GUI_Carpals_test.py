@@ -5,7 +5,6 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
-import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
@@ -165,12 +164,29 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
 
+    def alarm_setupui(self, MainWindow):
+        # ******************以下是控件的创建******************* #
+        self.frame_a = QtWidgets.QFrame(self.centralwidget)
+        self.lineEdit_a1 = QtWidgets.QLineEdit(self.frame_a)
+
+        # ******************以下是控件尺寸定义******************* #
+        self.lineEdit_a1.setGeometry(QtCore.QRect(20, 10, 170, 20))
+
+        # ******************以下是控件属性定义******************* #
+        self.frame_a.setEnabled(True)
+        self.frame_a.setAutoFillBackground(False)
+        self.frame_a.setHidden(True)
+        self.frame_a.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_a.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_a.setObjectName("frame_a")
+        self.lineEdit_a1.setObjectName("lineEdit_a1")
+
     def Qweiget_function(self):
         self.action.triggered.connect(lambda: self.frame_init(1))
         self.action_2.triggered.connect(lambda: self.frame_init(2))
         self.action_3.triggered.connect(lambda: self.frame_init(3))
-        self.action_4.triggered.connect(lambda: None)
-        self.action_5.triggered.connect(lambda: None)
+        self.action_4.triggered.connect(lambda: self.frame_init(4))
+        self.action_5.triggered.connect(lambda: self.frame_init(5))
 
         # toolbutton点击后（鼠标点击释放），打开文件目录
         self.toolButton_1.released.connect(lambda: self.openfile(1))
@@ -217,14 +233,22 @@ class Ui_MainWindow(object):
         self.pushButton_1.setText(_translate("MainWindow", "导入"))
         self.pushButton_2.setText(_translate("MainWindow", "清空"))
 
-
     def frame_init(self, n):
         if n == 1:
             self.frame.setHidden(True)
+            self.frame_a.setHidden(True)
         elif n == 2:
             self.frame.setHidden(True)
+            self.frame_a.setHidden(True)
         elif n == 3:
             self.frame.setHidden(False)
+            self.frame_a.setHidden(True)
+        elif n == 4:
+            self.frame.setHidden(True)
+            self.frame_a.setHidden(True)
+        elif n == 5:
+            self.frame.setHidden(True)
+            self.frame_a.setHidden(False)
 
     def openfile(self, n):
         """
@@ -369,10 +393,3 @@ class Ui_MainWindow(object):
                 c_item = self.fm.match_header(self.lineEdit_4.text())
                 self.comboBox_4.setCurrentText(c_item)
 
-# if __name__ == "__main__":
-#     app = QtWidgets.QApplication(sys.argv)
-#     mainWindow = QtWidgets.QMainWindow()
-#     ui = Ui_MainWindow()
-#     ui.setupUi(mainWindow)
-#     mainWindow.show()
-#     sys.exit(app.exec_())

@@ -6,6 +6,8 @@
 
 
 import sqlite3
+import sys
+
 from PySqlite import SqliteModify
 from PyFile import FileModify
 import pickle
@@ -44,6 +46,7 @@ if __name__ == '__main__':
     mainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(mainWindow)
+    ui.alarm_setupui(mainWindow)
     ui.Qweiget_function()
     mainWindow.show()
     sys.exit(app.exec_())
