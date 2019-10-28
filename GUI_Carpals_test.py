@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QApplication, QStyleFactory
 from PyFile import *
 
 
@@ -24,6 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.WindowModal)
+        QApplication.setStyle(QStyleFactory.create("Fusion"))
         # palette = QtGui.QPalette()
         # MainWindow.setPalette(palette)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
