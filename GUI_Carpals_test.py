@@ -45,7 +45,7 @@ class Ui_MainWindow(object):
         self.action_5 = QtWidgets.QAction(MainWindow)
 
         MainWindow.resize(725, 635)
-        brush = QtGui.QBrush(QtGui.QColor(170, 170, 255))
+        # brush = QtGui.QBrush(QtGui.QColor(170, 170, 255))
         self.menubar.setGeometry(QtCore.QRect(0, 0, 525, 23))
         self.menu.setGeometry(QtCore.QRect(256, 129, 120, 50))
 
@@ -82,6 +82,8 @@ class Ui_MainWindow(object):
         self.menubar.setEnabled(True)
         self.menubar.setTabletTracking(False)
         self.menubar.setDefaultUp(False)
+        self.icon = QtGui.QIcon()
+        self.icon.addPixmap(QtGui.QPixmap("File.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.retranslateUi(MainWindow)

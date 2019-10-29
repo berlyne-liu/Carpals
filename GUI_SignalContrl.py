@@ -18,6 +18,11 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.alarm_setupUi()
         self.fm = FileModify()
         self.list_i = self.fm.contrl_tablename()
+        self.file_path1 = None
+        self.file_path2 = None
+        self.file_path3 = None
+        self.file_path4 = None
+        self.file_path5 = None
 
     def QtWidget_Funtion(self):
         self.action.triggered.connect(lambda: self.frame_init(1))
@@ -31,6 +36,7 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.toolButton_2.released.connect(lambda: self.openfile(2))
         self.toolButton_3.released.connect(lambda: self.openfile(3))
         self.toolButton_4.released.connect(lambda: self.openfile(4))
+        self.toolButton_a1.released.connect(lambda: self.openfile(5))
 
         # Combobox 初始化：加入数据库的中的表名
         self.init_combobox(1, *self.list_i)
@@ -90,6 +96,9 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         elif n == 4:
             self.lineEdit_4.setText(openfile_name[0])
             self.file_path4 = openfile_name[0]
+        elif n == 5:
+            self.lineEdit_a1.setText(openfile_name[0])
+            self.file_path5 = openfile_name[0]
 
     def button_click(self):
         dic = {self.lineEdit_1.text(): self.comboBox.currentText(),

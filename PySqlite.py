@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # 这是一个sqlite入库的程序
 #
-#
-#
 
 import sqlite3
 import pandas
