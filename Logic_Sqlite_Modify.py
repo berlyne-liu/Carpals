@@ -60,12 +60,15 @@ if __name__ == "__main__":
     Path = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD状态"
     Path2 = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD告警.csv"
     Path3 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/告警设置.xlsx"
-    Path4 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/Alarm_sql.sql"
+    Path4 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/check_01.sql"
     connect = sqlite3.connect('Carpals.db')
     modify = Sqlite_Modify(connect)
     Ae = Alarm_Extraction()
     sq = modify.sqlite_query(Path4)
-    print(sq)
+    for i, row in enumerate(sq):
+        if str.find(row[0], "Alarm") != -1:
+            print(str.find(row[0], "Alarm"))
+            print(row[0])
     # head, data, Error = Ae.textExtraction(Path)
     # head1, data1, Error1 = Ae.csvExtraction(Path2)
     # h2, d2, e3 = Ae.excelExtraction(Path3)
