@@ -62,6 +62,7 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.frame_a.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_a.setFrameShadow(QtWidgets.QFrame.Raised)
         self.toolButton_a1.setIcon(self.icon)
+        self.lineEdit_a1.setFocusPolicy(QtCore.Qt.NoFocus)
         self.alarm_retranslateUi()
 
     def alarm_retranslateUi(self):

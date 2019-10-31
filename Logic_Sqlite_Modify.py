@@ -43,22 +43,34 @@ class Sqlite_Modify:
     def sqlite_output(self):
         pass
 
-    def sqlite_query(self):
-        pass
+    def sqlite_query(self, path):
+        """
+        读取写好的sql脚本文件，脚本字符串赋值到query_sql,并返回该字符串
+        """
+        with open(path, 'r', encoding='utf8') as file:
+            sql_text = file.readlines()
+        query_sql = "".join(sql_text)
+        # print(query_sql)
+        self.cur.execute(query_sql)
+        result = self.cur.fetchall()
+        return result
 
 
 if __name__ == "__main__":
     Path = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD状态"
     Path2 = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD告警.csv"
     Path3 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/告警设置.xlsx"
+    Path4 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/Alarm_sql.sql"
     connect = sqlite3.connect('Carpals.db')
     modify = Sqlite_Modify(connect)
     Ae = Alarm_Extraction()
+    sq = modify.sqlite_query(Path4)
+    print(sq)
     # head, data, Error = Ae.textExtraction(Path)
     # head1, data1, Error1 = Ae.csvExtraction(Path2)
-    h2, d2, e3 = Ae.excelExtraction(Path3)
-    modify.sqlite_creat(h2, table="Alarm_Standard")
-    modify.sqlite_insert(h2, d2, table="Alarm_Standard")
+    # h2, d2, e3 = Ae.excelExtraction(Path3)
+    # modify.sqlite_creat(h2, table="Alarm_Standard")
+    # modify.sqlite_insert(h2, d2, table="Alarm_Standard")
 
     # modify.sqlite_creat(head1, table="Alarm_FDD_Cause")
     # modify.sqlite_insert(head1, data1, table="Alarm_FDD_Cause")
