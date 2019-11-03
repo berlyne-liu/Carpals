@@ -5,15 +5,20 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
+from PyQt5.QtCore import QStringListModel, QPoint
+from PyQt5.QtGui import QCursor
+from PyQt5.QtWidgets import QMenu
 
 from GUI_Carpals_carpals import *
 from GUI_Carpals_Alarm import *
+from Logic_Sqlite_Modify import *
 
 
 class Ui_signalContrl(Ui_carpals, Ui_alarm):
     def __init__(self):
         Ui_carpals.__init__(self)
         Ui_alarm.__init__(self)
+        self.connect = sqlite3.connect('Carpals.db')
         self.carpals_setupUi()
         self.alarm_setupUi()
         self.fm = FileModify()
@@ -23,6 +28,9 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.file_path3 = None
         self.file_path4 = None
         self.file_path5 = None
+        self.Path4 = "F:/PycharmProjects/Carpals/check_01.sql"
+        self.add_list = []
+        self.dic_add = {}
 
     def QtWidget_Funtion(self):
         self.action.triggered.connect(lambda: self.frame_init(1))
@@ -39,21 +47,44 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.toolButton_a1.released.connect(lambda: self.openfile(5))
 
         # Combobox 初始化：加入数据库的中的表名
-        self.init_combobox(1, *self.list_i)
-        self.init_combobox(2, *self.list_i)
-        self.init_combobox(3, *self.list_i)
-        self.init_combobox(4, *self.list_i)
+        self.combobox_init(self.comboBox, reg_name="Carpals")
+        self.combobox_init(self.comboBox_2, reg_name="Carpals")
+        self.combobox_init(self.comboBox_3, reg_name="Carpals")
+        self.combobox_init(self.comboBox_4, reg_name="Carpals")
+        self.combobox_init(self.comboBox_a1, reg_name="Alarm")
+
         # combobox点击时刷新下拉菜单，每个下拉菜单选择后，后选的combobox不会重复出现选项
         self.comboBox.activated[int].connect(lambda: self.on_combo_activated(1))
         self.comboBox_2.activated[int].connect(lambda: self.on_combo_activated(2))
         self.comboBox_3.activated[int].connect(lambda: self.on_combo_activated(3))
         self.comboBox_4.activated[int].connect(lambda: self.on_combo_activated(4))
 
+        self.listView_a1.customContextMenuRequested[QPoint].connect(self.listWidgetContext)
+
         self.pushButton_1.released.connect(lambda: self.button_click())
+        self.pushButton_a2.released.connect(lambda: self.Alarm_Generated())
+        self.pushButton_a3.released.connect(lambda: self.addToList())
         self.lineEdit_1.textChanged.connect(lambda: self.line_change(1))
         self.lineEdit_2.textChanged.connect(lambda: self.line_change(2))
         self.lineEdit_3.textChanged.connect(lambda: self.line_change(3))
         self.lineEdit_4.textChanged.connect(lambda: self.line_change(4))
+
+    def combobox_init(self, widget, reg_name=None):
+        container = []
+        sm = Sqlite_Modify(self.connect)
+        sq = sm.sqlite_query(self.Path4)
+        for num, rows in enumerate(sq):
+            if rows[0][:rows[0].index("_")] == reg_name:
+                container.append(rows[0])
+        # print(container)
+        if len(container):
+            widget.clear()
+            widget.addItems(container)
+            widget.setCurrentIndex(-1)
+        else:
+            widget.clear()
+            widget.addItem("数据库无相关表数据")
+            # widget.setCurrentIndex(-1)
 
     def frame_init(self, n):
         if n == 1:
@@ -110,60 +141,66 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.table_view()
         # self.check_samefile()
 
-    def init_combobox(self, n, *args):
-        """
-        init_combobox方法用于初始化combobox的可选项item,将数据库可用表名在初始化时赋值到item
-        :param n: 用于识别对应的combobox被点击
-        :param args: 传入列表元素，增加到combobox的item上
-        :return: 无返回值
-        """
-        list_o = args
-        if n == 1:
-            self.comboBox.clear()
-            self.comboBox.addItems(list_o)
-            # 设置comboBox的默认值为空，
-            self.comboBox.setCurrentIndex(-1)
-        elif n == 2:
-            self.comboBox_2.clear()
-            self.comboBox_2.addItems(list_o)
-            # 设置comboBox的默认值为空，
-            self.comboBox_2.setCurrentIndex(-1)
-        elif n == 3:
-            self.comboBox_3.clear()
-            self.comboBox_3.addItems(list_o)
-            # 设置comboBox的默认值为空，
-            self.comboBox_3.setCurrentIndex(-1)
-        elif n == 4:
-            self.comboBox_4.clear()
-            self.comboBox_4.addItems(list_o)
-            # 设置comboBox的默认值为空，
-            self.comboBox_4.setCurrentIndex(-1)
+    def addToList(self):
+        add_path = self.lineEdit_a1.text()
+        add_type = self.comboBox_a1.currentText()
+        self.dic_add[add_path] = add_type
+        print(self.dic_add)
+        add_str = "将文件：" + str(add_path.split("/")[-1]) + "导入数据库：" + str(add_type)
+        self.add_list.append(add_str)
+        slm = QStringListModel()
+        slm.setStringList(self.add_list)
+        self.listView_a1.setModel(slm)
 
-    def on_combo_activated(self, n):
-        list_d = self.list_i
-        nums = []
-        coms = list(range(1, 5))
-        c1 = self.comboBox.currentText()
-        c2 = self.comboBox_2.currentText()
-        c3 = self.comboBox_3.currentText()
-        c4 = self.comboBox_4.currentText()
-        list_c = [c1, c2, c3, c4]
-        print(list_d + list_c)
-        list_d = [item1 for item1 in list_d if not item1 in list_c]
-        print('循环后：' + str(list_d))
-        # print(n)
-        for c in list_c:
-            if c != '':
-                num = list_c.index(c) + 1
-                nums.append(num)
-        ref = [item2 for item2 in coms if not item2 in nums]
-        for r in ref:
-            # print(r)
-            self.init_combobox(r, *list_d)
+    def listWidgetContext(self, point):
+        popMenu = QMenu()
+        popMenu.addAction("更新")
+        popMenu.addAction("修改")
+        popMenu.addAction("删除")
+        popMenu.exec_(QCursor.pos())
+
+    def Alarm_Generated(self):
+        Ae = Alarm_Extraction()
+        modify = Sqlite_Modify(self.connect)
+        for (path, table) in self.dic_add.items():
+            filetype = str(path).split(".")[-1]
+            if filetype.lower() == "":
+                hea, cont, err = Ae.textExtraction(path)
+                modify.sqlite_query(operation="delete", configure="Alarm")
+                modify.sqlite_insert(hea, cont, table=table)
+            elif filetype.lower() == "csv":
+                hea, cont, err = Ae.csvExtraction(path)
+                modify.sqlite_query(operation="delete", configure="Alarm")
+                modify.sqlite_insert(hea, cont, table=table)
+            elif filetype.lower() == "xlsx":
+                hea, cont, err = Ae.excelExtraction(path)
+                modify.sqlite_query(operation="delete", configure="Alarm")
+                modify.sqlite_insert(hea, cont, table=table)
+
+    # def on_combo_activated(self, n):
+    #     list_d = self.list_i
+    #     nums = []
+    #     coms = list(range(1, 5))
+    #     c1 = self.comboBox.currentText()
+    #     c2 = self.comboBox_2.currentText()
+    #     c3 = self.comboBox_3.currentText()
+    #     c4 = self.comboBox_4.currentText()
+    #     list_c = [c1, c2, c3, c4]
+    #     print(list_d + list_c)
+    #     list_d = [item1 for item1 in list_d if not item1 in list_c]
+    #     print('循环后：' + str(list_d))
+    #     # print(n)
+    #     for c in list_c:
+    #         if c != '':
+    #             num = list_c.index(c) + 1
+    #             nums.append(num)
+    #     ref = [item2 for item2 in coms if not item2 in nums]
+    #     for r in ref:
+    #         # print(r)
+    #         self.init_combobox(r, *list_d)
 
     def check_samefile(self):
         # 判断是否重复选择文件,以字典形式保存lineEdit与comboBox的对应关系
-
         dic = {self.lineEdit_1.text(): self.comboBox.currentText(),
                self.lineEdit_2.text(): self.comboBox_2.currentText(),
                self.lineEdit_3.text(): self.comboBox_3.currentText(),

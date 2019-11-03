@@ -44,10 +44,10 @@ class Ui_MainWindow(object):
         self.action_4 = QtWidgets.QAction(MainWindow)
         self.action_5 = QtWidgets.QAction(MainWindow)
 
-        MainWindow.resize(725, 635)
+        MainWindow.resize(1500, 900)
         # brush = QtGui.QBrush(QtGui.QColor(170, 170, 255))
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 525, 23))
-        self.menu.setGeometry(QtCore.QRect(256, 129, 120, 50))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1500, 70))
+        self.menu.setGeometry(QtCore.QRect(256, 129, 120, 70))
 
         # brush.setStyle(QtCore.Qt.SolidPattern)
         # palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)

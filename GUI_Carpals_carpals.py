@@ -38,7 +38,7 @@ class Ui_carpals(QMainWindow, Ui_MainWindow):
         self.pushButton_1 = QtWidgets.QPushButton(self.frame)
         self.pushButton_2 = QtWidgets.QPushButton(self.frame)
 
-        self.frame.setGeometry(QtCore.QRect(0, 0, 725, 635))
+        self.frame.setGeometry(QtCore.QRect(0, 0, 1500, 900))
         self.lineEdit_1.setGeometry(QtCore.QRect(20, 10, 170, 20))
         self.lineEdit_2.setGeometry(QtCore.QRect(20, 40, 170, 20))
         self.lineEdit_3.setGeometry(QtCore.QRect(20, 70, 170, 20))

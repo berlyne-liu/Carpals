@@ -3,6 +3,7 @@
 import csv
 import xlrd
 
+
 class Alarm_Extraction:
     def textExtraction(self, filepath):
         container = []
@@ -57,9 +58,9 @@ class Alarm_Extraction:
 
 
 if __name__ == "__main__":
-    Path = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD状态"
-    Path2 = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD告警.csv"
-    Path3 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/告警设置.xlsx"
+    Path = "F:/PycharmProjects/告警处理-工具/告警处理1022/FDD状态"
+    Path2 = "F:/PycharmProjects/告警处理-工具/告警处理1022/FDD告警.csv"
+    Path3 = "F:/PycharmProjects/Carpals/告警设置.xlsx"
     Ae = Alarm_Extraction()
     Ae.excelExtraction(Path3)
     # header, cont, Error = Ae.textExtraction(Path)

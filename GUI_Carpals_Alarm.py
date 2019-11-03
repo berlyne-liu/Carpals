@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QListView
 from GUI_Carpals_test import *
 
 
@@ -23,33 +23,24 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.pushButton_a1 = QtWidgets.QPushButton(self.frame_a)
         self.pushButton_a2 = QtWidgets.QPushButton(self.frame_a)
         self.pushButton_a3 = QtWidgets.QPushButton(self.frame_a)
-        self.pushButton_a4 = QtWidgets.QPushButton(self.frame_a)
-        self.pushButton_a5 = QtWidgets.QPushButton(self.frame_a)
-        self.pushButton_a6 = QtWidgets.QPushButton(self.frame_a)
         self.comboBox_a1 = QtWidgets.QComboBox(self.frame_a)
         self.listView_a1 = QtWidgets.QListView(self.frame_a)
         self.tableView_a1 = QtWidgets.QTableView(self.frame_a)
 
-        self.frame_a.setGeometry(QtCore.QRect(0, 0, 725, 635))
-        self.lineEdit_a1.setGeometry(QtCore.QRect(10, 30, 261, 30))
-        self.toolButton_a1.setGeometry(QtCore.QRect(260, 30, 30, 30))
-        self.pushButton_a1.setGeometry(QtCore.QRect(670, 40, 40, 40))
-        self.pushButton_a2.setGeometry(QtCore.QRect(670, 100, 40, 40))
-        self.pushButton_a3.setGeometry((QtCore.QRect(670, 160, 40, 40)))
-        self.pushButton_a4.setGeometry(QtCore.QRect(190, 190, 110, 40))
-        self.pushButton_a5.setGeometry(QtCore.QRect(310, 190, 110, 40))
-        self.pushButton_a6.setGeometry(QtCore.QRect(395, 30, 30, 30))
-        self.comboBox_a1.setGeometry(QtCore.QRect(295, 30, 95, 30))
-        self.listView_a1.setGeometry(QtCore.QRect(430, 30, 220, 210))
-        self.tableView_a1.setGeometry(QtCore.QRect(10, 260, 705, 320))
+        self.frame_a.setGeometry(QtCore.QRect(0, 0, 1500, 900))
+        self.lineEdit_a1.setGeometry(QtCore.QRect(20, 30, 590, 30))
+        self.toolButton_a1.setGeometry(QtCore.QRect(610, 30, 30, 30))
+        self.pushButton_a1.setGeometry(QtCore.QRect(480, 190, 200, 40))
+        self.pushButton_a2.setGeometry(QtCore.QRect(690, 190, 200, 40))
+        self.pushButton_a3.setGeometry(QtCore.QRect(860, 30, 30, 30))
+        self.comboBox_a1.setGeometry(QtCore.QRect(650, 30, 200, 30))
+        self.listView_a1.setGeometry(QtCore.QRect(930, 30, 520, 210))
+        self.tableView_a1.setGeometry(QtCore.QRect(10, 260, 1480, 560))
 
         # self.frame_a.setObjectName("frame_a")
         # self.lineEdit_a1.setObjectName("lineEdit_a1")
         # self.toolButton_a1.setObjectName("toolButton_a1")
         # self.listView_a1.setObjectName("listView_a1")
-        # self.pushButton_a1.setObjectName("pushButton_a1")
-        # self.pushButton_a2.setObjectName("pushButton_a2")
-        # self.pushButton_a3.setObjectName("pushButton_a3")
         # self.tableView_a1.setObjectName("tableView_a1")
         # self.pushButton_a4.setObjectName("pushButton_a4")
         # self.pushButton_a5.setObjectName("pushButton_a5")
@@ -63,16 +54,16 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.frame_a.setFrameShadow(QtWidgets.QFrame.Raised)
         self.toolButton_a1.setIcon(self.icon)
         self.lineEdit_a1.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.listView_a1.setViewMode(QListView.ListMode)
+        self.listView_a1.setResizeMode(QListView.Adjust)
+        self.listView_a1.setContextMenuPolicy(3)
         self.alarm_retranslateUi()
 
     def alarm_retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.toolButton_a1.setText(_translate("MainWindow", "文件"))
-        self.pushButton_a1.setText(_translate("MainWindow", "删除"))
-        self.pushButton_a2.setText(_translate("MainWindow", "修改"))
-        self.pushButton_a3.setText(_translate("MainWindow", "导入"))
-        self.pushButton_a4.setText(_translate("MainWindow", "清空"))
-        self.pushButton_a5.setText(_translate("MainWindow", "查询"))
-        self.pushButton_a6.setText(_translate("MainWindow", ">>"))
+        self.pushButton_a1.setText(_translate("MainWindow", "初始化界面"))
+        self.pushButton_a2.setText(_translate("MainWindow", "生成告警表"))
+        self.pushButton_a3.setText(_translate("MainWindow", ">>"))
 
 
