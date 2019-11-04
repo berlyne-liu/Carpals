@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5.QtWidgets import QMainWindow, QListView
+from PyQt5.QtWidgets import QMainWindow, QListView, QHeaderView
 from GUI_Carpals_test import *
 
 
@@ -59,6 +59,8 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.listView_a1.setViewMode(QListView.ListMode)
         self.listView_a1.setResizeMode(QListView.Adjust)
         self.listView_a1.setContextMenuPolicy(3)
+        self.tableView_a1.horizontalHeader().setStretchLastSection(True)  # 最后一列决定充满剩下的界面
+        # self.tableView_a1.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # 所有列自动拉伸，充满界面
         self.alarm_retranslateUi()
 
     def alarm_retranslateUi(self):

@@ -19,6 +19,7 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
     def __init__(self):
         Ui_carpals.__init__(self)
         Ui_alarm.__init__(self)
+        self.slm = QStringListModel()
         self.model = QStandardItemModel()
         self.connect = sqlite3.connect('Carpals.db')
         self.sm = Sqlite_Modify(self.connect)
@@ -151,9 +152,8 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         print(self.dic_add)
         add_str = "将文件：" + str(add_path.split("/")[-1]) + "导入数据库：" + str(add_table)
         self.add_list.append(add_str)
-        slm = QStringListModel()
-        slm.setStringList(self.add_list)
-        self.listView_a1.setModel(slm)
+        self.slm.setStringList(self.add_list)
+        self.listView_a1.setModel(self.slm)
 
     def listWidgetContext(self, point):
         popMenu = QMenu()
@@ -182,31 +182,12 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
                 print("文件错误")
         result = self.sm.sqlite_query("Alarm_sql.sql")
         self.table_view(self.tableView_a1, result)
+        self.dic_add.clear()
 
     def Alarm_removedata(self):
+        self.dic_add.clear()
         self.sm.sqlite_query(operation="delete", configure="Alarm")
-
-    # def on_combo_activated(self, n):
-    #     list_d = self.list_i
-    #     nums = []
-    #     coms = list(range(1, 5))
-    #     c1 = self.comboBox.currentText()
-    #     c2 = self.comboBox_2.currentText()
-    #     c3 = self.comboBox_3.currentText()
-    #     c4 = self.comboBox_4.currentText()
-    #     list_c = [c1, c2, c3, c4]
-    #     print(list_d + list_c)
-    #     list_d = [item1 for item1 in list_d if not item1 in list_c]
-    #     print('循环后：' + str(list_d))
-    #     # print(n)
-    #     for c in list_c:
-    #         if c != '':
-    #             num = list_c.index(c) + 1
-    #             nums.append(num)
-    #     ref = [item2 for item2 in coms if not item2 in nums]
-    #     for r in ref:
-    #         # print(r)
-    #         self.init_combobox(r, *list_d)
+        self.Alarm_init()
 
     def check_samefile(self):
         # 判断是否重复选择文件,以字典形式保存lineEdit与comboBox的对应关系
@@ -215,9 +196,9 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
                self.lineEdit_3.text(): self.comboBox_3.currentText(),
                self.lineEdit_4.text(): self.comboBox_4.currentText()}
         print(dic)
-        pass
 
     def table_view(self, widget, result):
+        self.model.clear()
         desc = self.sm.cur.description
         print(desc)
         h = [data[0] for data in desc]
@@ -228,6 +209,12 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
                 i = QStandardItem(str(item)) if item is not None else QStandardItem('')
                 self.model.setItem(row, column, i)
         widget.setModel(self.model)
+
+    def Alarm_init(self):
+        self.lineEdit_a1.clear()
+        self.comboBox_a1.setCurrentIndex(-1)
+        self.slm.setStringList([])
+        self.listView_a1.setModel(self.slm)
 
     def line_change(self, n):
         line_item = [self.lineEdit_1.text(),

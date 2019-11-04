@@ -1,4 +1,21 @@
-select Nodeid,GROUP_CONCAT(alarm," | ") as "alarmObject"
+select tempx.NodeId,tempx.EUtranCellFDDId,tempx.state,tempy.alarmObject from
+(select NodeId,EUtranCellFDDId,
+case
+when ad_state="LOCKED" THEN "闭塞"
+when ad_state="DISABLED" THEN "退服"
+else "正常"
+end as state
+from
+(select NodeId,EUtranCellFDDId,
+CASE
+WHEN administrativeState="LOCKED" THEN "LOCKED"
+WHEN administrativeState="UNLOCKED" THEN operationalState
+END AS ad_state
+from Alarm_FDD_State) as tempa
+) as tempx
+left join
+
+(select Nodeid,GROUP_CONCAT(alarm," | ") as "alarmObject"
 from
 (select Nodeid,STRFTIME('%Y-%m-%d %H:%M:%S', "dateid","localtime")||"  "||c."全量告警"||"("||"Alarmobject"||")" as "alarm"
 from
@@ -33,3 +50,6 @@ where b."告警英文" is not null
 ) as c
 ) as d
 GROUP BY Nodeid
+) as tempy
+on tempy.Nodeid=tempx.NodeId
+where tempy.alarmObject is not null

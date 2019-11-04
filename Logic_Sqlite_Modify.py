@@ -29,18 +29,19 @@ class Sqlite_Modify:
         """
         # print(args)
         str_head = ",".join("\"" + str(s) + "\"" for s in i_head)
-        str_Del = "delete from " + kwargs['table']
-        self.cur.execute(str_Del)
-        # print("delete:" + str_Del)
-        for i, rows in enumerate(args[0]):
-            try:
-                str_sql = ",".join("\"" + str(i).replace("\"", "'") + "\"" for i in rows)
-                query_i = """insert into """ + kwargs[
-                    'table'] + """ (""" + str_head + """) values (""" + str_sql + """)"""
-                # print(query_i)
-                self.cur.execute(query_i)
-            except Exception as e:
-                print("第%s行出现异常：" % i + str(e) + "\n插入语句为：\n" + str(rows))
+        # str_Del = "delete from " + kwargs['table']
+        # self.cur.execute(str_Del)
+        # # print("delete:" + str_Del)
+        for n, rows in enumerate(args[0]):
+            if n > 0:
+                try:
+                    str_sql = ",".join("\"" + str(i).replace("\"", "'") + "\"" for i in rows)
+                    query_i = """insert into """ + kwargs[
+                        'table'] + """ (""" + str_head + """) values (""" + str_sql + """)"""
+                    # print(query_i)
+                    self.cur.execute(query_i)
+                except Exception as e:
+                    print("第%s行出现异常：" % n + str(e) + "\n插入语句为：\n" + str(rows))
         self.connect.commit()
 
     def sqlite_output(self):
