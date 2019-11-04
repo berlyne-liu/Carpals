@@ -8,6 +8,7 @@
 from PyQt5.QtCore import QStringListModel, QPoint
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QMenu
+import os
 
 from GUI_Carpals_carpals import *
 from GUI_Carpals_Alarm import *
@@ -18,7 +19,9 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
     def __init__(self):
         Ui_carpals.__init__(self)
         Ui_alarm.__init__(self)
+        self.model = QStandardItemModel()
         self.connect = sqlite3.connect('Carpals.db')
+        self.sm = Sqlite_Modify(self.connect)
         self.carpals_setupUi()
         self.alarm_setupUi()
         self.fm = FileModify()
@@ -28,7 +31,7 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.file_path3 = None
         self.file_path4 = None
         self.file_path5 = None
-        self.Path4 = "F:/PycharmProjects/Carpals/check_01.sql"
+        self.Path4 = "/check_01.sql"
         self.add_list = []
         self.dic_add = {}
 
@@ -64,6 +67,7 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.pushButton_1.released.connect(lambda: self.button_click())
         self.pushButton_a2.released.connect(lambda: self.Alarm_Generated())
         self.pushButton_a3.released.connect(lambda: self.addToList())
+        self.pushButton_a4.released.connect(lambda: self.Alarm_removedata())
         self.lineEdit_1.textChanged.connect(lambda: self.line_change(1))
         self.lineEdit_2.textChanged.connect(lambda: self.line_change(2))
         self.lineEdit_3.textChanged.connect(lambda: self.line_change(3))
@@ -71,8 +75,7 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
 
     def combobox_init(self, widget, reg_name=None):
         container = []
-        sm = Sqlite_Modify(self.connect)
-        sq = sm.sqlite_query(self.Path4)
+        sq = self.sm.sqlite_query("check_01.sql")
         for num, rows in enumerate(sq):
             if rows[0][:rows[0].index("_")] == reg_name:
                 container.append(rows[0])
@@ -143,10 +146,10 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
 
     def addToList(self):
         add_path = self.lineEdit_a1.text()
-        add_type = self.comboBox_a1.currentText()
-        self.dic_add[add_path] = add_type
+        add_table = self.comboBox_a1.currentText()
+        self.dic_add[add_path] = add_table
         print(self.dic_add)
-        add_str = "将文件：" + str(add_path.split("/")[-1]) + "导入数据库：" + str(add_type)
+        add_str = "将文件：" + str(add_path.split("/")[-1]) + "导入数据库：" + str(add_table)
         self.add_list.append(add_str)
         slm = QStringListModel()
         slm.setStringList(self.add_list)
@@ -161,21 +164,27 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
 
     def Alarm_Generated(self):
         Ae = Alarm_Extraction()
-        modify = Sqlite_Modify(self.connect)
         for (path, table) in self.dic_add.items():
-            filetype = str(path).split(".")[-1]
-            if filetype.lower() == "":
-                hea, cont, err = Ae.textExtraction(path)
-                modify.sqlite_query(operation="delete", configure="Alarm")
-                modify.sqlite_insert(hea, cont, table=table)
-            elif filetype.lower() == "csv":
+            # filetype = str(path).split(".")[-1]
+            filetype = os.path.splitext(path)[-1]
+            # print(filetype)
+            if filetype.lower() == ".csv":
                 hea, cont, err = Ae.csvExtraction(path)
-                modify.sqlite_query(operation="delete", configure="Alarm")
-                modify.sqlite_insert(hea, cont, table=table)
-            elif filetype.lower() == "xlsx":
+                self.sm.sqlite_insert(hea, cont, table=table)
+            elif filetype.lower() == ".xlsx":
                 hea, cont, err = Ae.excelExtraction(path)
-                modify.sqlite_query(operation="delete", configure="Alarm")
-                modify.sqlite_insert(hea, cont, table=table)
+                self.sm.sqlite_insert(hea, cont, table=table)
+            elif filetype.find(".") == -1:
+                print(filetype.find("."))
+                hea, cont, err = Ae.textExtraction(path)
+                self.sm.sqlite_insert(hea, cont, table=table)
+            else:
+                print("文件错误")
+        result = self.sm.sqlite_query("Alarm_sql.sql")
+        self.table_view(self.tableView_a1, result)
+
+    def Alarm_removedata(self):
+        self.sm.sqlite_query(operation="delete", configure="Alarm")
 
     # def on_combo_activated(self, n):
     #     list_d = self.list_i
@@ -208,17 +217,17 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         print(dic)
         pass
 
-    def table_view(self):
-        fm = FileModify()
-        title, data = fm.contrl_sqlcheck()
-        print(enumerate(data))
-        self.model = QStandardItemModel()
-        self.model.setHorizontalHeaderLabels(title)
-        for row, data in enumerate(data):
+    def table_view(self, widget, result):
+        desc = self.sm.cur.description
+        print(desc)
+        h = [data[0] for data in desc]
+        self.model.setHorizontalHeaderLabels(h)
+        print(result)
+        for row, data in enumerate(result):
             for column, item in enumerate(data):
                 i = QStandardItem(str(item)) if item is not None else QStandardItem('')
                 self.model.setItem(row, column, i)
-        self.tableView.setModel(self.model)
+        widget.setModel(self.model)
 
     def line_change(self, n):
         line_item = [self.lineEdit_1.text(),

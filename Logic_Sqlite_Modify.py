@@ -29,6 +29,9 @@ class Sqlite_Modify:
         """
         # print(args)
         str_head = ",".join("\"" + str(s) + "\"" for s in i_head)
+        str_Del = "delete from " + kwargs['table']
+        self.cur.execute(str_Del)
+        # print("delete:" + str_Del)
         for i, rows in enumerate(args[0]):
             try:
                 str_sql = ",".join("\"" + str(i).replace("\"", "'") + "\"" for i in rows)
@@ -47,34 +50,41 @@ class Sqlite_Modify:
         """
         读取写好的sql脚本文件，脚本字符串赋值到query_sql,并返回该字符串
         """
-        if operation is None:
+        if operation is None and configure is None:
             with open(path, 'r', encoding='utf8') as file:
                 sql_text = file.readlines()
             query_sql = "".join(sql_text)
-            # print(query_sql)
             self.cur.execute(query_sql)
             result = self.cur.fetchall()
             return result
-        elif operation == "delete" and configure == "Alarm":
-            self.cur.execute("delete from Alarm_FDD_Cause;delete from Alarm_FDD_State")
-        elif operation == "delete" and configure == "Carpals":
-            pass
+        elif operation == "delete":
+            if configure == "Alarm":
+                self.cur.execute("delete from Alarm_FDD_State")
+                self.cur.execute("delete from Alarm_FDD_Cause")
+                self.connect.commit()
+            elif configure == "Carpals":
+                pass
+        elif operation == "update":
+            if configure == "Alarm":
+                pass
+            elif configure == "Carpals":
+                pass
         else:
             print("出错")
 
 
-if __name__ == "__main__":
-    Path = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD状态"
-    Path2 = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD告警.csv"
-    Path3 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/告警设置.xlsx"
-    Path4 = "F:/PycharmProjects/Carpals/check_01.sql"
-    connect = sqlite3.connect('Carpals.db')
-    modify = Sqlite_Modify(connect)
-    Ae = Alarm_Extraction()
-    sq = modify.sqlite_query(Path4)
-    for i, row in enumerate(sq):
-        if row[0][:row[0].index("_")] == "Alarm":
-            print(row[0])
+# if __name__ == "__main__":
+#     Path = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD状态"
+#     Path2 = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD告警.csv"
+#     Path3 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/告警设置.xlsx"
+#     Path4 = "F:/PycharmProjects/Carpals/check_01.sql"
+#     connect = sqlite3.connect('Carpals.db')
+#     modify = Sqlite_Modify(connect)
+#     Ae = Alarm_Extraction()
+#     sq = modify.sqlite_query(Path4)
+#     for i, row in enumerate(sq):
+#         if row[0][:row[0].index("_")] == "Alarm":
+#             print(row[0])
     # head, data, Error = Ae.textExtraction(Path)
     # head1, data1, Error1 = Ae.csvExtraction(Path2)
     # h2, d2, e3 = Ae.excelExtraction(Path3)

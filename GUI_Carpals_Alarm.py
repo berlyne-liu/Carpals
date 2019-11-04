@@ -23,6 +23,7 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.pushButton_a1 = QtWidgets.QPushButton(self.frame_a)
         self.pushButton_a2 = QtWidgets.QPushButton(self.frame_a)
         self.pushButton_a3 = QtWidgets.QPushButton(self.frame_a)
+        self.pushButton_a4 = QtWidgets.QPushButton(self.frame_a)
         self.comboBox_a1 = QtWidgets.QComboBox(self.frame_a)
         self.listView_a1 = QtWidgets.QListView(self.frame_a)
         self.tableView_a1 = QtWidgets.QTableView(self.frame_a)
@@ -33,6 +34,7 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.pushButton_a1.setGeometry(QtCore.QRect(480, 190, 200, 40))
         self.pushButton_a2.setGeometry(QtCore.QRect(690, 190, 200, 40))
         self.pushButton_a3.setGeometry(QtCore.QRect(860, 30, 30, 30))
+        self.pushButton_a4.setGeometry(QtCore.QRect(270, 190, 200, 40))
         self.comboBox_a1.setGeometry(QtCore.QRect(650, 30, 200, 30))
         self.listView_a1.setGeometry(QtCore.QRect(930, 30, 520, 210))
         self.tableView_a1.setGeometry(QtCore.QRect(10, 260, 1480, 560))
@@ -65,5 +67,6 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.pushButton_a1.setText(_translate("MainWindow", "初始化界面"))
         self.pushButton_a2.setText(_translate("MainWindow", "生成告警表"))
         self.pushButton_a3.setText(_translate("MainWindow", ">>"))
+        self.pushButton_a4.setText(_translate("MainWindow", "清空数据表"))
 
 

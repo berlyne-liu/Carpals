@@ -27,7 +27,7 @@ replace("Alarming Object","EUtranCellFDD=","") as "Alarmobject"
 from Alarm_FDD_Cause
 ) as a
 LEFT JOIN
-(select "告警英文","全量告警" from Alarm_Standard) as b
+(select "告警英文","全量告警" from Configure_Alarm_Standard) as b
 on a."Specific Problem"=b."告警英文"
 where b."告警英文" is not null
 ) as c
