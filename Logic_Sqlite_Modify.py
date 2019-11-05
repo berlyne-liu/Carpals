@@ -27,11 +27,9 @@ class Sqlite_Modify:
         **kwargs:用于识别需要导入的表名，格式table=xx
         传入需导入的数据，传入类型为列表
         """
-        # print(args)
         str_head = ",".join("\"" + str(s) + "\"" for s in i_head)
-        # str_Del = "delete from " + kwargs['table']
-        # self.cur.execute(str_Del)
-        # # print("delete:" + str_Del)
+        if str_head.find("EUtranCellTDDId"):
+            str_head.replace("EUtranCellTDDId", "EUtranCellFDDId")
         for n, rows in enumerate(args[0]):
             if n > 0:
                 try:
@@ -47,7 +45,7 @@ class Sqlite_Modify:
     def sqlite_output(self):
         pass
 
-    def sqlite_query(self, path=None, operation=None, configure=None):
+    def sqlite_query(self, path=None, operation=None, configure=None, query_Str=None):
         """
         读取写好的sql脚本文件，脚本字符串赋值到query_sql,并返回该字符串
         """
@@ -60,9 +58,11 @@ class Sqlite_Modify:
             return result
         elif operation == "delete":
             if configure == "Alarm":
-                self.cur.execute("delete from Alarm_FDD_State")
-                self.cur.execute("delete from Alarm_FDD_Cause")
+                self.cur.execute("delete from Alarm_State")
+                self.cur.execute("delete from Alarm_Cause")
                 self.connect.commit()
+                result = self.cur.fetchall()
+                print(result)
             elif configure == "Carpals":
                 pass
         elif operation == "update":
@@ -70,30 +70,10 @@ class Sqlite_Modify:
                 pass
             elif configure == "Carpals":
                 pass
+        elif operation == "query":
+            self.cur.execute(query_Str)
+            self.connect.commit()
+            result = self.cur.fetchall()
+            return result
         else:
             print("出错")
-
-
-# if __name__ == "__main__":
-#     Path = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD状态"
-#     Path2 = "C:/Users/My-PC/Desktop/alarm/告警处理-工具/告警处理1022/FDD告警.csv"
-#     Path3 = "E:/Program Files/JetBrains/PyDemo/Github_Clone/告警设置.xlsx"
-#     Path4 = "F:/PycharmProjects/Carpals/check_01.sql"
-#     connect = sqlite3.connect('Carpals.db')
-#     modify = Sqlite_Modify(connect)
-#     Ae = Alarm_Extraction()
-#     sq = modify.sqlite_query(Path4)
-#     for i, row in enumerate(sq):
-#         if row[0][:row[0].index("_")] == "Alarm":
-#             print(row[0])
-    # head, data, Error = Ae.textExtraction(Path)
-    # head1, data1, Error1 = Ae.csvExtraction(Path2)
-    # h2, d2, e3 = Ae.excelExtraction(Path3)
-    # modify.sqlite_creat(h2, table="Alarm_Standard")
-    # modify.sqlite_insert(h2, d2, table="Alarm_Standard")
-
-    # modify.sqlite_creat(head1, table="Alarm_FDD_Cause")
-    # modify.sqlite_insert(head1, data1, table="Alarm_FDD_Cause")
-    #
-    # modify.sqlite_creat(head, table="Alarm_FDD_State")
-    # modify.sqlite_insert(head, data, table="Alarm_FDD_State")

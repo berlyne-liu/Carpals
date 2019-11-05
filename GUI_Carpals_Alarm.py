@@ -27,25 +27,19 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.comboBox_a1 = QtWidgets.QComboBox(self.frame_a)
         self.listView_a1 = QtWidgets.QListView(self.frame_a)
         self.tableView_a1 = QtWidgets.QTableView(self.frame_a)
+        self.tableView_a2 = QtWidgets.QTableView(self.frame_a)
 
-        self.frame_a.setGeometry(QtCore.QRect(0, 0, 1500, 900))
-        self.lineEdit_a1.setGeometry(QtCore.QRect(20, 30, 590, 30))
-        self.toolButton_a1.setGeometry(QtCore.QRect(610, 30, 30, 30))
-        self.pushButton_a1.setGeometry(QtCore.QRect(480, 190, 200, 40))
-        self.pushButton_a2.setGeometry(QtCore.QRect(690, 190, 200, 40))
-        self.pushButton_a3.setGeometry(QtCore.QRect(860, 30, 30, 30))
-        self.pushButton_a4.setGeometry(QtCore.QRect(270, 190, 200, 40))
-        self.comboBox_a1.setGeometry(QtCore.QRect(650, 30, 200, 30))
-        self.listView_a1.setGeometry(QtCore.QRect(930, 30, 520, 210))
-        self.tableView_a1.setGeometry(QtCore.QRect(10, 260, 1480, 560))
-
-        # self.frame_a.setObjectName("frame_a")
-        # self.lineEdit_a1.setObjectName("lineEdit_a1")
-        # self.toolButton_a1.setObjectName("toolButton_a1")
-        # self.listView_a1.setObjectName("listView_a1")
-        # self.tableView_a1.setObjectName("tableView_a1")
-        # self.pushButton_a4.setObjectName("pushButton_a4")
-        # self.pushButton_a5.setObjectName("pushButton_a5")
+        self.frame_a.setGeometry(QtCore.QRect(0, 0, 1000, 600))
+        self.lineEdit_a1.setGeometry(QtCore.QRect(10, 20, 490, 30))
+        self.toolButton_a1.setGeometry(QtCore.QRect(500, 20, 30, 30))
+        self.pushButton_a1.setGeometry(QtCore.QRect(590, 60, 100, 30))
+        self.pushButton_a2.setGeometry(QtCore.QRect(590, 100, 100, 30))
+        self.pushButton_a3.setGeometry(QtCore.QRect(660, 20, 30, 30))
+        self.pushButton_a4.setGeometry(QtCore.QRect(590, 140, 100, 30))
+        self.comboBox_a1.setGeometry(QtCore.QRect(535, 20, 120, 30))
+        self.listView_a1.setGeometry(QtCore.QRect(700, 20, 290, 160))
+        self.tableView_a1.setGeometry(QtCore.QRect(10, 200, 980, 350))
+        self.tableView_a2.setGeometry(QtCore.QRect(10, 70, 200, 120))
 
         self.frame_a.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_a.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -59,7 +53,9 @@ class Ui_alarm(QMainWindow, Ui_MainWindow):
         self.listView_a1.setViewMode(QListView.ListMode)
         self.listView_a1.setResizeMode(QListView.Adjust)
         self.listView_a1.setContextMenuPolicy(3)
-        self.tableView_a1.horizontalHeader().setStretchLastSection(True)  # 最后一列决定充满剩下的界面
+        self.tableView_a1.horizontalHeader().setStretchLastSection(True)
+        self.tableView_a2.horizontalHeader().setStretchLastSection(True)
+        # 最后一列决定充满剩下的界面
         # self.tableView_a1.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # 所有列自动拉伸，充满界面
         self.alarm_retranslateUi()
 

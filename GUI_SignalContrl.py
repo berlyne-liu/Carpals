@@ -5,9 +5,9 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
-from PyQt5.QtCore import QStringListModel, QPoint
-from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QMenu
+from PyQt5.QtCore import Qt,QStringListModel, QPoint
+from PyQt5.QtGui import QCursor, QColor, QBrush, QFont
+from PyQt5.QtWidgets import QMenu, QMessageBox, QTableView
 import os
 
 from GUI_Carpals_carpals import *
@@ -20,7 +20,6 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         Ui_carpals.__init__(self)
         Ui_alarm.__init__(self)
         self.slm = QStringListModel()
-        self.model = QStandardItemModel()
         self.connect = sqlite3.connect('Carpals.db')
         self.sm = Sqlite_Modify(self.connect)
         self.carpals_setupUi()
@@ -115,10 +114,10 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         """
         openfile_name = QFileDialog.getOpenFileName(self.centralwidget, '选择文件', '')
         file_name = openfile_name[0].split("/")[-1]
-        print('linetext_{0}被输入数据：'.format(n) + openfile_name[0])
-        print('文件名为：' + file_name)
+        # print('linetext_{0}被输入数据：'.format(n) + openfile_name[0])
+        # print('文件名为：' + file_name)
         if n == 1:
-            print(self.lineEdit_1.text())
+            # print(self.lineEdit_1.text())
             self.lineEdit_1.setText(openfile_name[0])
             self.file_path1 = openfile_name[0]
             # print(self.file_path1)
@@ -148,12 +147,17 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
     def addToList(self):
         add_path = self.lineEdit_a1.text()
         add_table = self.comboBox_a1.currentText()
-        self.dic_add[add_path] = add_table
-        print(self.dic_add)
-        add_str = "将文件：" + str(add_path.split("/")[-1]) + "导入数据库：" + str(add_table)
-        self.add_list.append(add_str)
-        self.slm.setStringList(self.add_list)
-        self.listView_a1.setModel(self.slm)
+        if len(add_path)*len(add_table) != 0:
+            self.dic_add[add_path] = add_table
+            add_str = "将文件：" + str(add_path.split("/")[-1]) + "导入数据库：" + str(add_table)
+            self.add_list.append(add_str)
+            self.slm.setStringList(self.add_list)
+            self.listView_a1.setModel(self.slm)
+        else:
+            self.QMessageBoxShow("错误提示框", "文件路径和导入数据表不能为空！")
+
+    def QMessageBoxShow(self, title, message):
+        QMessageBox.warning(self, title, message, QMessageBox.Yes | QMessageBox.No)
 
     def listWidgetContext(self, point):
         popMenu = QMenu()
@@ -167,25 +171,29 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         for (path, table) in self.dic_add.items():
             # filetype = str(path).split(".")[-1]
             filetype = os.path.splitext(path)[-1]
-            # print(filetype)
             if filetype.lower() == ".csv":
                 hea, cont, err = Ae.csvExtraction(path)
-                self.sm.sqlite_insert(hea, cont, table=table)
             elif filetype.lower() == ".xlsx":
                 hea, cont, err = Ae.excelExtraction(path)
-                self.sm.sqlite_insert(hea, cont, table=table)
             elif filetype.find(".") == -1:
-                print(filetype.find("."))
                 hea, cont, err = Ae.textExtraction(path)
-                self.sm.sqlite_insert(hea, cont, table=table)
             else:
-                print("文件错误")
-        result = self.sm.sqlite_query("Alarm_sql.sql")
-        self.table_view(self.tableView_a1, result)
+                self.QMessageBoxShow("文件错误提示框", "您输入的文件路径不符合规则，请输入.txt/.xlsx/无扩展名的文件")
+                return
+            self.sm.sqlite_insert(hea, cont, table=table)
+        str_query = "select  'Alarm_Cause(告警信息)' as '数据表',count(*) as '实时数据量'," \
+                    "datetime('now','localtime') as '查询时间' from Alarm_Cause union " \
+                    "select  'Alarm_State(小区状态)' as '数据表',count(*) as '实时数据量'," \
+                    "datetime('now','localtime') as '查询时间' from Alarm_State"
+        Query_result = self.sm.sqlite_query(operation="query", query_Str=str_query)
+        self.table_view(self.tableView_a2, Query_result)
+        Alarm_result = self.sm.sqlite_query("Alarm_sql.sql")
+        self.table_view(self.tableView_a1, Alarm_result)
         self.dic_add.clear()
 
     def Alarm_removedata(self):
         self.dic_add.clear()
+        # print(self.dic_add)
         self.sm.sqlite_query(operation="delete", configure="Alarm")
         self.Alarm_init()
 
@@ -195,25 +203,28 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
                self.lineEdit_2.text(): self.comboBox_2.currentText(),
                self.lineEdit_3.text(): self.comboBox_3.currentText(),
                self.lineEdit_4.text(): self.comboBox_4.currentText()}
-        print(dic)
+        # print(dic)
 
     def table_view(self, widget, result):
-        self.model.clear()
+        model = QStandardItemModel()
+        model.clear()
         desc = self.sm.cur.description
-        print(desc)
         h = [data[0] for data in desc]
-        self.model.setHorizontalHeaderLabels(h)
-        print(result)
+        model.setHorizontalHeaderLabels(h)
+        widget.setEditTriggers(QTableView.NoEditTriggers)
         for row, data in enumerate(result):
             for column, item in enumerate(data):
                 i = QStandardItem(str(item)) if item is not None else QStandardItem('')
-                self.model.setItem(row, column, i)
-        widget.setModel(self.model)
+                # i.setTextAlignment(Qt.AlignLeft)
+                # i.setFont(QFont("", 6, ""))
+                model.setItem(row, column, i)
+        widget.setModel(model)
 
     def Alarm_init(self):
+        self.add_list.clear()
         self.lineEdit_a1.clear()
         self.comboBox_a1.setCurrentIndex(-1)
-        self.slm.setStringList([])
+        self.slm.setStringList(self.add_list)
         self.listView_a1.setModel(self.slm)
 
     def line_change(self, n):

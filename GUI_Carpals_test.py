@@ -13,14 +13,6 @@ from PyFile import *
 
 
 class Ui_MainWindow(object):
-    # def __init__(self):
-    #     self.fm = FileModify()
-    #     self.list_i = self.fm.contrl_tablename()
-    #     self.file_path1 = None
-    #     self.file_path2 = None
-    #     self.file_path3 = None
-    #     self.file_path4 = None
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.WindowModal)
@@ -44,16 +36,14 @@ class Ui_MainWindow(object):
         self.action_4 = QtWidgets.QAction(MainWindow)
         self.action_5 = QtWidgets.QAction(MainWindow)
 
-        MainWindow.resize(1500, 900)
-        # brush = QtGui.QBrush(QtGui.QColor(170, 170, 255))
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1500, 70))
+        MainWindow.resize(1000, 600)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 70))
         self.menu.setGeometry(QtCore.QRect(256, 129, 120, 70))
 
-        # brush.setStyle(QtCore.Qt.SolidPattern)
-        # palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
         MainWindow.setAcceptDrops(True)
         MainWindow.setAnimated(True)
         MainWindow.setDockNestingEnabled(False)
+        MainWindow.setFixedSize(MainWindow.width(), MainWindow.height())
         self.menubar.setCursor(QtGui.QCursor(QtCore.Qt.UpArrowCursor))
 
         self.centralwidget.setObjectName("centralwidget")

@@ -1,5 +1,10 @@
-select tempx.NodeId,tempx.EUtranCellFDDId,tempx.state,tempy.alarmObject from
+select tempx.NodeId,tempx.EUtranCellFDDId,tempx.Type,state,tempy.alarmObject from
 (select NodeId,EUtranCellFDDId,
+case  
+WHEN substr(NodeId,-3,3) in ("ELH","ELW","ELR")THEN "TDD"																										 
+WHEN substr(NodeId,-3,3) in ("EFH","EFW","EFR") THEN "FDD"
+ELSE "TDD"
+END AS "Type",
 case
 when ad_state="LOCKED" THEN "闭塞"
 when ad_state="DISABLED" THEN "退服"
@@ -11,10 +16,9 @@ CASE
 WHEN administrativeState="LOCKED" THEN "LOCKED"
 WHEN administrativeState="UNLOCKED" THEN operationalState
 END AS ad_state
-from Alarm_FDD_State) as tempa
+from Alarm_State) as tempa
 ) as tempx
 left join
-
 (select Nodeid,GROUP_CONCAT(alarm," | ") as "alarmObject"
 from
 (select Nodeid,STRFTIME('%Y-%m-%d %H:%M:%S', "dateid","localtime")||"  "||c."全量告警"||"("||"Alarmobject"||")" as "alarm"
@@ -41,7 +45,7 @@ substr("Event Time",-20,2)||
 substr("Event Time",-8,-10) as "dateid",
 "Specific Problem",
 replace("Alarming Object","EUtranCellFDD=","") as "Alarmobject"
-from Alarm_FDD_Cause
+from Alarm_Cause
 ) as a
 LEFT JOIN
 (select "告警英文","全量告警" from Configure_Alarm_Standard) as b
@@ -52,4 +56,3 @@ where b."告警英文" is not null
 GROUP BY Nodeid
 ) as tempy
 on tempy.Nodeid=tempx.NodeId
-where tempy.alarmObject is not null
