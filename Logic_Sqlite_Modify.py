@@ -42,9 +42,6 @@ class Sqlite_Modify:
                     print("第%s行出现异常：" % n + str(e) + "\n插入语句为：\n" + str(rows))
         self.connect.commit()
 
-    def sqlite_output(self):
-        pass
-
     def sqlite_query(self, path=None, operation=None, configure=None, query_Str=None):
         """
         读取写好的sql脚本文件，脚本字符串赋值到query_sql,并返回该字符串

@@ -5,11 +5,11 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
-from PyQt5.QtCore import Qt,QStringListModel, QPoint
+from PyQt5.QtCore import Qt, QStringListModel, QPoint
 from PyQt5.QtGui import QCursor, QColor, QBrush, QFont
 from PyQt5.QtWidgets import QMenu, QMessageBox, QTableView
 import os
-
+from xlwt import *
 from GUI_Carpals_carpals import *
 from GUI_Carpals_Alarm import *
 from Logic_Sqlite_Modify import *
@@ -65,6 +65,7 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.listView_a1.customContextMenuRequested[QPoint].connect(self.listWidgetContext)
 
         self.pushButton_1.released.connect(lambda: self.button_click())
+        self.pushButton_a1.released.connect(lambda: self.Alarm_Export())
         self.pushButton_a2.released.connect(lambda: self.Alarm_Generated())
         self.pushButton_a3.released.connect(lambda: self.addToList())
         self.pushButton_a4.released.connect(lambda: self.Alarm_removedata())
@@ -147,14 +148,20 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
     def addToList(self):
         add_path = self.lineEdit_a1.text()
         add_table = self.comboBox_a1.currentText()
+        add_type = os.path.splitext(add_path)[-1]
         if len(add_path)*len(add_table) != 0:
-            self.dic_add[add_path] = add_table
-            add_str = "将文件：" + str(add_path.split("/")[-1]) + "导入数据库：" + str(add_table)
-            self.add_list.append(add_str)
-            self.slm.setStringList(self.add_list)
-            self.listView_a1.setModel(self.slm)
+            if add_type.lower() in (".csv", ".xlsx") or add_type.find(".") == -1:
+                self.dic_add[add_path] = add_table
+                add_str = "将文件：" + str(add_path.split("/")[-1]) + "导入数据库：" + str(add_table)
+                self.add_list.append(add_str)
+                self.slm.setStringList(self.add_list)
+                self.listView_a1.setModel(self.slm)
+            else:
+                self.QMessageBoxShow("文件错误提示框", "您输入的文件路径不符合规则，请输入.txt/.xlsx/无扩展名的文件")
+                return
         else:
             self.QMessageBoxShow("错误提示框", "文件路径和导入数据表不能为空！")
+            return
 
     def QMessageBoxShow(self, title, message):
         QMessageBox.warning(self, title, message, QMessageBox.Yes | QMessageBox.No)
@@ -181,19 +188,21 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
                 self.QMessageBoxShow("文件错误提示框", "您输入的文件路径不符合规则，请输入.txt/.xlsx/无扩展名的文件")
                 return
             self.sm.sqlite_insert(hea, cont, table=table)
+        self.Ontime_Query()
+        Alarm_result = self.sm.sqlite_query("Alarm_sql.sql")
+        self.table_view(self.tableView_a1, Alarm_result)
+        self.dic_add.clear()
+
+    def Ontime_Query(self):
         str_query = "select  'Alarm_Cause(告警信息)' as '数据表',count(*) as '实时数据量'," \
                     "datetime('now','localtime') as '查询时间' from Alarm_Cause union " \
                     "select  'Alarm_State(小区状态)' as '数据表',count(*) as '实时数据量'," \
                     "datetime('now','localtime') as '查询时间' from Alarm_State"
         Query_result = self.sm.sqlite_query(operation="query", query_Str=str_query)
         self.table_view(self.tableView_a2, Query_result)
-        Alarm_result = self.sm.sqlite_query("Alarm_sql.sql")
-        self.table_view(self.tableView_a1, Alarm_result)
-        self.dic_add.clear()
 
     def Alarm_removedata(self):
         self.dic_add.clear()
-        # print(self.dic_add)
         self.sm.sqlite_query(operation="delete", configure="Alarm")
         self.Alarm_init()
 
@@ -208,17 +217,28 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
     def table_view(self, widget, result):
         model = QStandardItemModel()
         model.clear()
+        font_a1 = self.Tableview_setFont()
         desc = self.sm.cur.description
         h = [data[0] for data in desc]
         model.setHorizontalHeaderLabels(h)
+        widget.setFont(font_a1)
         widget.setEditTriggers(QTableView.NoEditTriggers)
+        # widget.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        widget.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
         for row, data in enumerate(result):
             for column, item in enumerate(data):
                 i = QStandardItem(str(item)) if item is not None else QStandardItem('')
-                # i.setTextAlignment(Qt.AlignLeft)
-                # i.setFont(QFont("", 6, ""))
                 model.setItem(row, column, i)
         widget.setModel(model)
+
+    def Tableview_setFont(self, family="Microsoft YaHei", size=7, bold=False, weight=10):
+        font = QFont()
+        font.setFamily(family)
+        font.setPointSize(size)
+        font.setBold(bold)
+        font.setWeight(weight)
+        return font
 
     def Alarm_init(self):
         self.add_list.clear()
@@ -226,6 +246,20 @@ class Ui_signalContrl(Ui_carpals, Ui_alarm):
         self.comboBox_a1.setCurrentIndex(-1)
         self.slm.setStringList(self.add_list)
         self.listView_a1.setModel(self.slm)
+        self.tableView_a1.setModel(None)
+        self.Ontime_Query()
+
+    def Alarm_Export(self):
+        Alarm_result = self.sm.sqlite_query("Alarm_sql.sql")
+        h = [data[0] for data in self.sm.cur.description]
+        book = Workbook()
+        sheet = book.add_sheet("告警表")
+        for rowx, head in enumerate(h):
+            sheet.write(0, rowx, head)
+        for rowy, row in enumerate(Alarm_result):
+            for colx, text in enumerate(row):
+                sheet.write(rowy+1, colx, text)
+        book.save("告警表.xls")
 
     def line_change(self, n):
         line_item = [self.lineEdit_1.text(),

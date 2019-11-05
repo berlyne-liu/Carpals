@@ -56,16 +56,3 @@ class Alarm_Extraction:
             e_header = None
         return e_header, container, error
 
-
-if __name__ == "__main__":
-    Path = "F:/PycharmProjects/告警处理-工具/告警处理1022/FDD状态"
-    Path2 = "F:/PycharmProjects/告警处理-工具/告警处理1022/FDD告警.csv"
-    Path3 = "F:/PycharmProjects/Carpals/告警设置.xlsx"
-    Ae = Alarm_Extraction()
-    Ae.excelExtraction(Path3)
-    # header, cont, Error = Ae.textExtraction(Path)
-    # print(cont)
-    # ceh, cec, error2 = Ae.csvExtraction(Path2)
-    # print(cec)
-    h2, c2, e2 = Ae.excelExtraction(Path3)
-    print(c2)
